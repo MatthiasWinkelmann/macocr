@@ -1,5 +1,5 @@
 import ArgumentParser
-@available(macOS 11.0, *)
+@available(macOS 15.0, *)
 @main
 struct Repeat: ArgumentParser.ParsableCommand {
     @Flag(inversion: FlagInversion.prefixedNo, help: "fast")
@@ -9,7 +9,7 @@ struct Repeat: ArgumentParser.ParsableCommand {
     // @Option(name: .shortAndLong, help: "User word file")
     // var wordfile: String?
 
-    @Argument(completion: .file(extensions: ["jpg","jpeg","png","tiff"]))
+    @Argument(completion: .file(extensions: ["jpg","jpeg","png","tiff","heic"]))
     var files: [String] = []
 
 

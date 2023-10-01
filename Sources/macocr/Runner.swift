@@ -8,9 +8,7 @@ import Cocoa
 import Vision
 import Foundation
 
-
-
-@available(macOS 11.0, *)
+@available(macOS 15.0, *)
 class Runner {
 
 
@@ -19,12 +17,12 @@ class Runner {
         var fileExtention: String
 
         // This list can include anything returned by CGImageDestinationCopyTypeIdentifiers()
-        // I'm including only the popular formats here
-        static let bmp = ImageFileType(uti: kUTTypeBMP, fileExtention: "bmp")
-        static let gif = ImageFileType(uti: kUTTypeGIF, fileExtention: "gif")
-        static let jpg = ImageFileType(uti: kUTTypeJPEG, fileExtention: "jpg")
-        static let png = ImageFileType(uti: kUTTypePNG, fileExtention: "png")
-        static let tiff = ImageFileType(uti: kUTTypeTIFF, fileExtention: "tiff")
+        static let bmp = ImageFileType(uti: kUTTypeImage, fileExtention: "bmp")
+        static let gif = ImageFileType(uti: kUTTypeImage, fileExtention: "gif")
+        static let jpg = ImageFileType(uti: kUTTypeImage, fileExtention: "jpg")
+        static let png = ImageFileType(uti: kUTTypeImage, fileExtention: "png")
+        static let tiff = ImageFileType(uti: kUTTypeImage, fileExtention: "tiff")
+        static let heic = ImageFileType(uti: kUTTypeImage, fileExtention: "heic")
     }
 
     func convertPDF(at sourceURL: URL, to destinationURL: URL, fileType: ImageFileType, dpi: CGFloat = 200) throws -> [URL] {
@@ -65,7 +63,6 @@ class Runner {
 
 static func run(files: [String]) -> Int32 {
 
-
     // Flag ideas:
     // --version
     // Print REVISION
@@ -80,10 +77,6 @@ static func run(files: [String]) -> Int32 {
     for url in urls {
 
         let img = NSImage(byReferencing: url)
-
-
-
-    let desc = img.debugDescription
         guard let imgRef = img.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
             fputs("Error: failed to convert NSImage to CGImage for '\(url)'\n", stderr)
             return 1
@@ -98,9 +91,9 @@ static func run(files: [String]) -> Int32 {
         }
         request.recognitionLevel = VNRequestTextRecognitionLevel.accurate // or .fast
         request.usesLanguageCorrection = true
-        request.revision = VNRecognizeTextRequestRevision2
-        request.recognitionLanguages = ["de"]
-        request.customWords = ["der", "Der", "Name"]
+        request.revision = VNRecognizeTextRequestRevision3
+        request.recognitionLanguages = ["de", "en"]
+//        request.customWords = ["more", "Worte", "Wort"]
 
         try? VNImageRequestHandler(cgImage: imgRef, options: [:]).perform([request])
     }
